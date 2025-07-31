@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.38.2">
+    <meta name="project" content="eustaquia v0.1.0">
+
+
+    <title>Overview — eustaquia v0.1.0</title>
+
+    <link rel="stylesheet" href="dist/html-erlang-DQDXQC7W.css" />
+
+    <script defer src="dist/sidebar_items-81E1E444.js"></script>
+    <script defer src="docs_config.js"></script>
+    <script defer src="dist/html-DPJLHKSM.js"></script>
+
+  </head>
+  <body>
+    <script>(()=>{var t="ex_doc:settings",e="dark";var o="dark",s="light";var E="sidebar_state",n="closed";var r="sidebar_width";var a="sidebar-open";var i=new URLSearchParams(window.location.search),S=i.get("theme")||JSON.parse(localStorage.getItem(t)||"{}").theme;(S===o||S!==s&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.body.classList.add(e);var d=sessionStorage.getItem(E),A=d!==n&&!window.matchMedia(`screen and (max-width: ${768}px)`).matches;document.body.classList.toggle(a,A);var c=sessionStorage.getItem(r);c&&document.body.style.setProperty("--sidebarWidth",`${c}px`);var p=/(Macintosh|iPhone|iPad|iPod)/.test(window.navigator.userAgent);document.documentElement.classList.toggle("apple-os",p);})();
+</script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+      <div>
+        <a href="readme.html" class="sidebar-projectName" translate="no">
+eustaquia
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v0.1.0
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-list-nav" class="sidebar-list-nav" role="tablist" data-extras=""></ul>
+  </div>
+</nav>
+
+<output role="status" id="toast"></output>
+
+<main class="content page-extra" id="main" data-type="extras">
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of eustaquia</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search" tabindex="-1">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <div class="heading-with-actions top-heading">
+    <h1>🌱 Eustaquia</h1>
+
+
+      <a href="https://github.com/IciaCarroBarallobre/eustaquia/blob/v0.1.0/README.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+  </div>
+
+
+<p>Eustaquia is a playful project that lets a plant “talk” when it’s thirsty.
+Using a <a href="https://www.grisp.org">GRiSP2 board</a> running Erlang, it reads soil humidity and moves a face from happy 😀 to sad 😢 with a servo motor — a fun, beginner‑friendly way to explore GRiSP, embedded Erlang, and simple electronics.</p><p><img src="assets/eustaquia.gif" alt="Eustaquia"/></p><h2 id="how" class="section-heading"><a href="#how" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">🌀 How?</span></h2><pre><code class="mermaid">stateDiagram-v2
+    [*] --&gt; OutOfSoil
+
+    OutOfSoil : Sensor out of soil
+    OutOfSoil : Face = Sad (down)
+    OutOfSoil --&gt; Measuring : Inserted in soil / Start reading
+
+    Measuring : Reading humidity via I2C
+    Measuring --&gt; Happy : Humidity &gt;= Threshold
+    Measuring --&gt; Sad : Humidity &lt; Threshold
+
+    Happy : Face = Happy
+    Happy --&gt; Measuring : 5s Timer / Recheck humidity
+
+    Sad : Face = Sad (down)
+    Sad --&gt; Measuring : 5s Timer / Recheck humidity</code></pre><p>In words:</p><ol><li>When the sensor is not inserted, the face is tilted down (sad).</li><li>When placed in the soil, it reads humidity every 5 seconds via I2C.</li><li>If humidity is above a threshold, Eustaquia smiles 😀.</li><li>If humidity is below the threshold, it stays sad 😢.</li></ol><blockquote><p>⚠️ The initial state looks just like the “sad” face. To verify that everything is working, dip the sensor in water and watch it change to happy.</p></blockquote><h2 id="useful-concepts" class="section-heading"><a href="#useful-concepts" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">🧠 Useful Concepts</span></h2><ul><li><p><strong>I2C (Inter-Integrated Circuit)</strong>: A protocol that lets components to exchange data using only two lines: SDA, for transmitting data and SCL, for providing the clock signal that synchronizes communication. Supported by GRiSP through its. It is supported by GRiSP via its <a href="https://hexdocs.pm/grisp/grisp_i2c.html">I2C library</a>. Used here to read soil moisture levels.</p></li><li><p><strong>PWM (Pulse Width Modulation)</strong>: A technique that regulates the power delivered to a device by rapidly switching the signal on and off. The duty cycle (percentage of time the signal is on) determines the output power—0% for fully off, 50% for half power, and 100% for fully on. Supported by GRiSP via its <a href="https://hexdocs.pm/grisp/grisp_pwm.html">PWM library</a>, making it ideal for controlling a servomotor to animate a sad face or a smile face.</p></li></ul><h2 id="components-and-how-to-connect-them" class="section-heading"><a href="#components-and-how-to-connect-them" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">🛠️ Components and how to connect them</span></h2><p>To bring your plant project to life, you’ll need:</p><ul><li>🟩 <strong><a href="https://www.grisp.org/hardware">GRiSP2 embedded board</a></strong> – runs Erlang/Elixir directly on RTEMS, no Linux needed.</li><li>🔌 <strong>USB cable (micro-USB)</strong> – To power the board and access the console</li><li>💾 <strong>microSD card</strong> (optional) – For deploying your application. If your GRiSP board is already linked to <a href="https://grisp.io/">GRiSP.io</a>, you can deploy software updates remotely (OTA) without needing a microSD card or USB cable.</li><li>🪴 <strong>Capacitive soil moisture sensor</strong> – I used an <a href="https://www.adafruit.com/product/4026">Adafruit Soil Moisture Sensor (I²C)</a> model; corrosion-proof and stable readings.</li><li>⚙️ <strong>SG90 servo motor</strong> (or similar) – To move Eustaquia’s face</li><li>🔌 <a href="https://digilent.com/shop/pmod-con3-r-c-servo-connectors/">PMOD CON3: R/C Servo Connectors</a> – Easily connect the servo to GRiSP without soldering</li><li>🔋 <strong>Power source</strong> for the servo</li><li>🧵 <strong>Jumper wires</strong> – For connections.</li><li>🎨 <strong>A face for Eustaquia</strong> – Cardboard, 3D print, markers… get creative!</li></ul><p>How to connect them: TODO</p><h2 id="build-using-a-sd-card" class="section-heading"><a href="#build-using-a-sd-card" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">⚙️ Build using a SD-Card</span></h2><ol><li>Compile the application locally: <code class="inline">rebar3 compile</code></li><li>Flash and deploy the application to a GRiSP device: <code class="inline">rebar3 grisp deploy</code></li><li>Insert the SD card into the GRiSP board and power it up.</li></ol><p>ℹ️ For more information on how this process works, check the <a href="https://github.com/grisp/grisp/wiki">GRiSP wiki</a>.</p><h2 id="documentation" class="section-heading"><a href="#documentation" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">📦 Documentation</span></h2><p>Generate documentation locally:</p><pre><code class="makeup sh" translate="no"><span class="">rebar3 ex_doc
+</span><span class="">open doc/index.html
+</span></code></pre><h2 id="testing" class="section-heading"><a href="#testing" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">🧪 Testing</span></h2><p>You can manually test Eustaquia by connecting to the shell on the GRiSP board (<a href="https://github.com/grisp/grisp/wiki/Connecting-over-Serial">over a Serial</a>, for example) and running the provided test functions:</p><p>Inside the Erlang shell:</p><pre><code class="makeup erl" translate="no"><span class="gp unselectable">1&gt; </span><span class="nc">eustaquia</span><span class="p">:</span><span class="nf">test_moisture</span><span class="p" data-group-id="7329680680-1">(</span><span class="p" data-group-id="7329680680-1">)</span><span class="p">.</span><span class="w">
+</span><span class="c1">%% → Reads the current soil moisture value once.</span><span class="w">
+
+</span><span class="mi">2</span><span class="o">&gt;</span><span class="w"> </span><span class="nc">eustaquia</span><span class="p">:</span><span class="nf">test_servo_happy</span><span class="p" data-group-id="7329680680-2">(</span><span class="p" data-group-id="7329680680-2">)</span><span class="p">.</span><span class="w">
+</span><span class="c1">%% → Moves the servo to the &quot;happy&quot; 😀 position.</span><span class="w">
+
+</span><span class="mi">3</span><span class="o">&gt;</span><span class="w"> </span><span class="nc">eustaquia</span><span class="p">:</span><span class="nf">test_servo_sad</span><span class="p" data-group-id="7329680680-3">(</span><span class="p" data-group-id="7329680680-3">)</span><span class="p">.</span><span class="w">
+</span><span class="c1">%% → Moves the servo to the &quot;sad&quot; 😢 position.</span></code></pre><p>These commands let you verify that the sensor and servo are working correctly before running the full application loop.</p><h2 id="future-ideas" class="section-heading"><a href="#future-ideas" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">🔮 Future Ideas</span></h2><ul><li>📱 <strong>Notifications</strong>: Send a message to your phone when Eustaquia is thirsty.</li><li>🌿 <strong>Plant network</strong>:  Imagine a “neighborhood watch” for plants — if one plant is thirsty 😢, nearby plants running on BEAM nodes can exchange messages to react in sympathy, creating a collective sadness that shows exactly where water is needed.</li></ul>
+
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="changelog.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Changelog
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="license.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+License
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+          <span class="line">
+            <a href="https://hex.pm/packages/eustaquia/0.1.0" class="footer-hex-package">Hex Package</a>
+
+            <a href="https://preview.hex.pm/preview/eustaquia/0.1.0">Hex Preview</a>
+
+              (<a href="https://preview.hex.pm/preview/eustaquia/0.1.0/show/README.md">current file</a>)
+
+          </span>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="eustaquia.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.38.2) for the
+
+          <a href="https://erlang.org" title="Erlang" target="_blank" translate="no">Erlang programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+
+  </body>
+</html>
