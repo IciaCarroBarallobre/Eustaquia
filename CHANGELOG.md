@@ -24,7 +24,7 @@ and this project adheres to Semantic Versioning.
 
 ### TODO
 
-- Write the how to connect components section
+- Write the how to connect components section, upload images, and also explain in a better way the pmod con3 connection (just 6 pins into 12 grisp spec pmod) and how to uses the 1_4.
 - Improve error handling for hardware faults.
 - Add unit and integration tests.
 - Implement notification system (SMS, MQTT).
