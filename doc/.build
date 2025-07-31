@@ -1,7 +1,12 @@
 404.html
 api-reference.html
 assets/Eustaquia.png
+assets/PMODCON3.png
+assets/SG90.png
+assets/adafruit_soil.jpg
+assets/battery_holder.jpg
 assets/eustaquia.gif
+assets/i2cPMOD.png
 changelog.html
 dist/html-DPJLHKSM.js
 dist/html-erlang-DQDXQC7W.css
@@ -10,8 +15,8 @@ dist/lato-latin-700-normal-2XVSBPG4.woff2
 dist/lato-latin-ext-400-normal-N27NCBWW.woff2
 dist/lato-latin-ext-700-normal-Q2L5DVMW.woff2
 dist/remixicon-QPNJX265.woff2
-dist/search_data-600A36AA.js
-dist/sidebar_items-81E1E444.js
+dist/search_data-76A98444.js
+dist/sidebar_items-A04FA0EF.js
 eustaquia.html
 eustaquia_sup.html
 hum_sensor.html

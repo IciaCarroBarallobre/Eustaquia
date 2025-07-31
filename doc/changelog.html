@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="dist/html-erlang-DQDXQC7W.css" />
 
-    <script defer src="dist/sidebar_items-81E1E444.js"></script>
+    <script defer src="dist/sidebar_items-A04FA0EF.js"></script>
     <script defer src="docs_config.js"></script>
     <script defer src="dist/html-DPJLHKSM.js"></script>
 
@@ -85,7 +85,8 @@ eustaquia
   </div>
 
 
-
+<p>All notable changes to this project will be documented in this file.</p><p>The format is based on Keep a Changelog,
+and this project adheres to Semantic Versioning.</p><h2 id="1-0-0-2025-07-31" class="section-heading"><a href="#1-0-0-2025-07-31" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">[1.0.0] - 2025-07-31</span></h2><h3 id="added" class="section-heading"><a href="#added" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Added</span></h3><ul><li>Initial public release of Eustaquia.</li><li>Core application modules:<ul><li>eustaquia: Main application with humidity-check loop and public test API.</li><li>hum_sensor: Reads soil moisture via I²C.</li><li>servo_emo: Controls servo motor via PWM to express emotions.</li></ul></li><li>Testing utilities:<ul><li>eustaquia:test_moisture/0, eustaquia:test_servo_happy/0, eustaquia:test_servo_sad/0.</li></ul></li></ul><h3 id="known-issues" class="section-heading"><a href="#known-issues" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">Known Issues</span></h3><ul><li>Initial state (out of soil) looks the same as “sad”.</li><li>Servo position may drift over time due to lack of feedback.</li></ul><h3 id="todo" class="section-heading"><a href="#todo" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i></a><span class="text">TODO</span></h3><ul><li>Write the how to connect components section</li><li>Improve error handling for hardware faults.</li><li>Add unit and integration tests.</li><li>Implement notification system (SMS, MQTT).</li><li>Create a multi-plant network for shared BEAM-based communication.</li></ul>
 
 </div>
 
