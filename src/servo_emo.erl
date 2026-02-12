@@ -29,8 +29,8 @@ pin is already open, it will reuse the existing instance.
 """.
 -spec start(Pin :: atom()) -> ok | {error, Reason :: term()}.
 start(Pin) ->
-    try
-        grisp_pwm:start_driver()
+    _ = try
+        _ = grisp_pwm:start_driver()
     catch
         error:{already_started, _Pid} ->
             io:format("PWM driver already started.~n"),

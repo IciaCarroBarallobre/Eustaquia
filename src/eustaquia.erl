@@ -25,13 +25,14 @@ broadcasting a `waterpls` message when the plant is thirsty.
 %% Public API
 -export([
     loop/0,
+    check_sensor/0,
     test_moisture/0,
     test_servo_happy/0,
     test_servo_sad/0
 ]).
 
-%% Constants
--define(THRESHOLD, 1000).    %% Humidity threshold
+%% Constants (Adafruit STEMMA soil sensor: capacitive ~200 dry, ~2000 wet)
+-define(THRESHOLD, 1000).    %% Moisture threshold; below = dry
 -define(INTERVAL, 5000).     %% Interval (ms) between readings
 -define(PIN, gpio1_4).       %% Servo pin
 
@@ -104,6 +105,31 @@ wait() ->
         _ ->
             wait()
     end.
+
+-doc """
+Runs a quick check of the I2C soil sensor (seesaw protocol).
+
+Prints moisture and temperature. Use this to verify wiring and that the
+sensor responds before running the full loop. Requires GRiSP + I2C PMOD
++ Adafruit STEMMA soil sensor connected.
+""".
+-spec check_sensor() -> ok.
+check_sensor() ->
+    io:format("Checking soil sensor (I2C seesaw)...~n", []),
+    case hum_sensor:get_moisture() of
+        {ok, M} ->
+            io:format("  Moisture: ~p (typical range dry 200, wet 2000)~n", [M]);
+        {error, ErrM} ->
+            io:format("  Moisture: ERROR ~p~n", [ErrM])
+    end,
+    case hum_sensor:read_temperature() of
+        {ok, T} ->
+            io:format("  Temperature: ~.1f °C~n", [T]);
+        {error, ErrT} ->
+            io:format("  Temperature: ERROR ~p~n", [ErrT])
+    end,
+    io:format("Done. If both OK, sensor is working.~n", []),
+    ok.
 
 -doc """
 Reads moisture once and returns the sensor value.
