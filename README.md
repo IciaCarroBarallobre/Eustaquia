@@ -1,11 +1,13 @@
 # 🌱 Eustaquia
 
-Eustaquia is a playful project that lets a plant “talk” when it’s thirsty.
-Using a [GRiSP2 board](https://www.grisp.org) running Erlang, it reads soil humidity and moves a face from happy 😀 to sad 😢 with a servo motor — a fun, beginner‑friendly way to explore GRiSP, embedded Erlang, and simple electronics.
+Eustaquia is a playful project that lets a plant “talk” when it’s thirsty. A [GRiSP2 board](https://www.grisp.org) running Erlang reads soil humidity via I²C and drives a servo to switch a face from happy 😀 to sad 😢 — a simple way to explore GRiSP, embedded Erlang, and basic electronics.
 
-![Eustaquia](assets/eustaquia.gif)
+<table>
+<tr><th>Animation Example</th><th>Real test</th></tr>
+<tr><td><img src="assets/eustaquia.gif" alt="Eustaquia animation" width="250" /></td><td><img src="https://github.com/user-attachments/assets/de4b2513-cdc5-47a7-b37a-8f87d1318e2d" alt="Real test" width="250" /></td></tr>
+</table>
 
-## 🌀 How?
+## How it works
 
 ```mermaid
 stateDiagram-v2
@@ -15,7 +17,7 @@ stateDiagram-v2
     OutOfSoil : Face = Sad (down)
     OutOfSoil --> Measuring : Inserted in soil / Start reading
 
-    Measuring : Reading humidity via I2C
+    Measuring : Reading humidity via I²C
     Measuring --> Happy : Humidity >= Threshold
     Measuring --> Sad : Humidity < Threshold
 
@@ -26,139 +28,100 @@ stateDiagram-v2
     Sad --> Measuring : 5s Timer / Recheck humidity
 ```
 
-In words:
+In short:
 
-1. When the sensor is not inserted, the face is tilted down (sad).
-2. When placed in the soil, it reads humidity every 5 seconds via I2C.
-3. If humidity is above a threshold, Eustaquia smiles 😀.
-4. If humidity is below the threshold, it stays sad 😢.
+1. When the sensor is not in the soil, the face stays down (sad).
+2. Once in the soil, humidity is read every 5 seconds over I²C.
+3. If humidity is above the threshold → Eustaquia smiles 😀.
+4. If humidity is below the threshold → face stays sad 😢.
 
-> ⚠️ The initial state looks just like the “sad” face. To verify that everything is working, dip the sensor in water and watch it change to happy.
+> **Tip:** The initial state looks like the sad face. To confirm everything works, dip the sensor in water and watch it switch to happy.
 
-## 🧠 Useful Concepts
+## Concepts
 
-- **I2C (Inter-Integrated Circuit)**: A protocol that lets components to exchange data using only two lines: SDA, for transmitting data and SCL, for providing the clock signal that synchronizes communication. Supported by GRiSP through its. It is supported by GRiSP via its [I2C library](https://hexdocs.pm/grisp/grisp_i2c.html). Used here to read soil moisture levels.
+- **I²C (Inter-Integrated Circuit)** — Protocol for talking to devices over two lines: **SDA** (data) and **SCL** (clock). GRiSP supports it via [grisp_i2c](https://hexdocs.pm/grisp/grisp_i2c.html). Used here to read the soil moisture sensor (seesaw protocol).
 
-- **PWM (Pulse Width Modulation)**: A technique that regulates the power delivered to a device by rapidly switching the signal on and off. The duty cycle (percentage of time the signal is on) determines the output power—0% for fully off, 50% for half power, and 100% for fully on. Supported by GRiSP via its [PWM library](https://hexdocs.pm/grisp/grisp_pwm.html), making it ideal for controlling a servomotor to animate a sad face or a smile face.
+- **PWM (Pulse Width Modulation)** — You turn the signal on and off quickly; the duty cycle (percentage of time on) controls the effect. GRiSP provides [grisp_pwm](https://hexdocs.pm/grisp/grisp_pwm.html), which we use to drive the servo (happy vs sad position).
 
-## 🛠️ Components and how to connect them
+## Components and wiring
 
-### Components
+See **[docs/WIRING.md](docs/WIRING.md)** for the step-by-step wiring guide.
 
-To bring your plant project to life, you’ll need:
+<table>
+<tr><th>Real Image 1</th><th>Real Image 2</th></tr>
+<tr><td><img src="https://github.com/user-attachments/assets/741c4778-5f97-4125-b1aa-3f3f10294eb1" alt="Real image" width="200" /></td><td><img src="https://github.com/user-attachments/assets/353e9b85-fd41-4bae-b505-8102d1480fb9" alt="Real image: how to connect all items" width="200" /></td></tr>
+</table>
 
-- 🟩 **[GRiSP2 embedded board](https://www.grisp.org/hardware)** – runs Erlang/Elixir directly on RTEMS, no Linux needed.
-- 🔌 **USB cable (micro-USB)** – To power the board and access the console
-- 💾 **microSD card** (optional) – For deploying your application. If your GRiSP board is already linked to [GRiSP.io](https://grisp.io/), you can deploy software updates remotely (OTA) without needing a microSD card or USB cable.
-- 🪴 **Capacitive soil moisture sensor** – I used an [Adafruit Soil Moisture Sensor (I²C)](https://www.adafruit.com/product/4026) model; corrosion-proof and stable readings.
-- ⚙️ **SG90 servo motor** (or similar) – To move Eustaquia’s face
-- 🔌 [PMOD CON3: R/C Servo Connectors](https://digilent.com/shop/pmod-con3-r-c-servo-connectors/) – A small add-on board that lets you easily connect and control up to four servo motors.
-- 🔋 **Power source** for the servo
-- 🧵 **Jumper wires** – For connections.
-- 🎨 **A face for Eustaquia** – Cardboard, 3D print, markers… get creative!
+## Build and deploy (SD card)
 
-### How to connect them
+1. **Compile:** `rebar3 compile`
+2. **Deploy to GRiSP:** `rebar3 grisp deploy`
+3. Insert the SD card into the board and power it on.
 
-#### Servo Motor
+See the [GRiSP wiki](https://github.com/grisp/grisp/wiki) for more detail.
 
-We want to connect a PMOD CON3, a battery and a servo:
+## Documentation
 
-![Servo](assets/SG90.png)
-![PMOD CON3](assets/PMODCON3.png)
-![Battery](assets/battery_holder.jpg)
-
-To connect the servo, plug the PMOD R/C Servo module directly into the GRiSP board GPIO and attach the servo’s signal wire to the GPIO1_4 pin.
-
-**How?**
-
-🔋 Power and ground for the servo are provided through the PMOD connector, but since servos often need more current than the GRiSP board can safely supply, you should use a small external battery. The SG90 servo operating Voltage: 4.8V to 6V.
-
-> ℹ️ Recommended: A small 5V battery pack (for example, 4x AA batteries = 6V, or a regulated USB 5V source).
-
-To do this, connect the battery directly to the PMOD connector:
-
-- Loosen the small screws on the PMOD’s power terminals (the blue block).
-- Insert the battery wires into the terminals:
-  - The negative wire (usually black) goes to the terminal marked “–”.
-  - The positive wire (usually red) goes to the terminal marked “+”.
-- Tighten the screws to secure the wires.
-
-This setup allows the servo to receive enough power while still being controlled by the GRiSP board through the signal pin.
-
-⚙️ To connect a servo to the PMOD R/C Servo (Pmod CON3), simply match the three wires of the servo to the corresponding pins on the PMOD:
-
-- The signal wire (usually orange, yellow, or white) goes to SIG
-- The power wire (red) goes to VS for voltage supply
-- The ground wire (black or brown) connects to GND.
-
-#### Soil moisture sensor
-
-To connect the I²C soil moisture sensor, use a PMOD I²C module plugged into the GRiSP board and wire SCL to SCL, SDA to SDA, VCC to 3.3V or 5V (depending on the sensor), and GND to ground. The optional INT and RESET pins can be left unconnected.
-
-**How?**
-
-![Soil Sensor](assets/adafruit_soil.jpg)
-
-Looking at the PMOD R/C Servo (Pmod CON3) with the triangle marker pointing to the left, the pinout from top to bottom is:
-
-- GND - power and logic ground
-- VIN - 3-5V DC (use the same power voltage as you would for I2C logic)
-- I2C SDA - there's a 10K pullup to VIN
-- I2C SCL - there's a 10K pullup to VIN
-
-More info at [Pinouts AdaFruit Stemma Soil Sensor](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/pinouts).
-
-Digilent Pmod Interface Specification that is updating the I2C spec to be 6-pin with:
-
-![PMOD I2C GRiSP](assets/i2cPMOD.png)
-
-- I2C SCL - signals on pin 3.
-- I2C SDA - signals on pin 4.
-- GND - Pin 5
-- VIN - PIN 6
-- Optional, interrupt and reset pins on 1 and 2 respectively.
-
-Check the 1 marker on the board to know where is the pin 1.
-
-More info at [PMOD I2C Spec](https://digilent.com/blog/new-i2c-standard-for-pmods/?srsltid=AfmBOoptLmLxP8FrLFza-cjVbrfgA9ECXlfR_V6dQ86XCC2ZdKUZdG3h).
-
-## ⚙️ Build using a SD-Card
-
-1. Compile the application locally: ``rebar3 compile``
-2. Flash and deploy the application to a GRiSP device: `rebar3 grisp deploy`
-3. Insert the SD card into the GRiSP board and power it up.
-
-ℹ️ For more information on how this process works, check the [GRiSP wiki](https://github.com/grisp/grisp/wiki).
-
-## 📦 Documentation
-
-Generate documentation locally:
+Generate docs locally:
 
 ```sh
 rebar3 ex_doc
 open doc/index.html
 ```
 
-## 🧪 Testing
+- **[docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md)** (EN) / **[docs/IMPLEMENTACION.md](docs/IMPLEMENTACION.md)** (ES) — full implementation guide.
+- **[docs/WIRING.md](docs/WIRING.md)** — wiring and connection guide.
 
-You can manually test Eustaquia by connecting to the shell on the GRiSP board ([over a Serial](https://github.com/grisp/grisp/wiki/Connecting-over-Serial), for example) and running the provided test functions:
+## Testing
 
-Inside the Erlang shell:
+Connect to the GRiSP shell (e.g. [over serial](https://github.com/grisp/grisp/wiki/Connecting-over-Serial)), then run the tests below.
+
+### Step 1 — Hardware
+
+- Power the GRiSP (USB or external).
+- Plug the **PMOD I²C** into the board (external bus, usually `i2c1`).
+- Connect the **soil sensor** with the 4-wire cable: **VIN** → PMOD VCC, **GND** → GND, **SDA** → SDA, **SCL** → SCL. Do not swap SDA and SCL.
+- If using the servo: connect the PMOD R/C Servo and servo as described above.
+
+### Step 2 — Compile and flash
+
+- In the project root: `rebar3 compile`. Fix any deps with `rebar3 deps` if needed.
+- Flash: `rebar3 grisp deploy` (or `rebar3 grisp burn`). Insert the SD card if required, then power the board.
+
+### Step 3 — Open the Erlang shell
+
+- Connect over serial (see [GRiSP wiki](https://github.com/grisp/grisp/wiki/Connecting-over-Serial)).
+- Start the app if it does not start automatically; you should be able to call the project modules.
+
+### Step 4 — Check the sensor
+
+In the shell:
 
 ```erl
-1> eustaquia:test_moisture().
-%% → Reads the current soil moisture value once.
-
-2> eustaquia:test_servo_happy().
-%% → Moves the servo to the "happy" 😀 position.
-
-3> eustaquia:test_servo_sad().
-%% → Moves the servo to the "sad" 😢 position.
+1> eustaquia:check_sensor().
+Checking soil sensor (I2C seesaw)...
+  Moisture: 850 (typical range dry 200, wet 2000)
+  Temperature: 22.5 °C
+Done. If both OK, sensor is working.
+ok
 ```
 
-These commands let you verify that the sensor and servo are working correctly before running the full application loop.
+If you see reasonable values (moisture ~200–2000, temperature in °C), the seesaw protocol and sensor are working. On error, check wiring (VIN, GND, SDA, SCL), PMOD connection, and bus (`i2c1`). You can run `grisp_i2c:detect(i2c1)` to list I²C addresses (sensor is usually **0x36**).
 
-## 🔮 Future Ideas
+### Step 5 — Optional tests
 
-- 📱 **Notifications**: Send a message to your phone when Eustaquia is thirsty.
-- 🌿 **Plant network**:  Imagine a “neighborhood watch” for plants — if one plant is thirsty 😢, nearby plants running on BEAM nodes can exchange messages to react in sympathy, creating a collective sadness that shows exactly where water is needed.
+- `eustaquia:test_moisture().` — Read humidity once.
+- `eustaquia:test_servo_happy().` / `eustaquia:test_servo_sad().` — Move the servo to happy or sad.
+- `eustaquia:loop().` — Full loop: every 5 s read humidity and update the face. Stop the process to exit.
+
+## Future ideas
+
+- **Notifications** — Notify your phone when the plant is thirsty.
+- **Plant network** — Several plants on BEAM nodes sharing state (e.g. a “neighborhood watch” so you see which one needs water).
+- **Configurable humidity threshold** — Make the dry/wet threshold configurable (e.g. via config or shell) so you can tune it per plant or soil type.
+
+## Further reading
+
+- **[docs/IMPLEMENTATION.md](docs/IMPLEMENTATION.md)** (EN) / **[docs/IMPLEMENTACION.md](docs/IMPLEMENTACION.md)** (ES) — implementation details, hardware, software layers.
+- **[docs/WIRING.md](docs/WIRING.md)** — wiring and connection guide with diagrams and photos.
+

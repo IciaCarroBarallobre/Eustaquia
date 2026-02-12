@@ -2,10 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on Keep a Changelog,
-and this project adheres to Semantic Versioning.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-07-31
+## [Unreleased]
 
 ### Added
 
@@ -16,6 +16,14 @@ and this project adheres to Semantic Versioning.
   - servo_emo: Controls servo motor via PWM to express emotions.
 - Testing utilities:
   - eustaquia:test_moisture/0, eustaquia:test_servo_happy/0, eustaquia:test_servo_sad/0.
+- **docs/** folder with implementation guides:
+  - **docs/IMPLEMENTATION.md** — Full implementation guide in English (hardware, I²C, PMOD, PWM, software layers).
+  - **docs/IMPLEMENTACION.md** — Same guide in Spanish.
+
+### Changed
+
+- README links to implementation guides now point to **docs/IMPLEMENTATION.md** and **docs/IMPLEMENTACION.md**.
+- Spelling and consistency pass on README and implementation docs.
 
 ### Known Issues
 
@@ -24,7 +32,7 @@ and this project adheres to Semantic Versioning.
 
 ### TODO
 
-- Write the how to connect components section, upload images, and also explain in a better way the pmod con3 connection (just 6 pins into 12 grisp spec pmod) and how to uses the 1_4.
+- Write the how to connect components section, upload images, and explain the PMOD CON3 connection (6 pins into 12 GRiSP PMOD) and how to use GPIO1_4.
 - Improve error handling for hardware faults.
 - Add unit and integration tests.
 - Implement notification system (SMS, MQTT).
