@@ -19,3 +19,7 @@ rebar3.crashdump
 # GRiSP
 _grisp
 grisp/*
+
+# Docs
+doc/*
+doc/
